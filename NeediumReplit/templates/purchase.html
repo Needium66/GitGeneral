@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase {{ car.display_name }} - AutoSales Pro{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Car Details Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-car me-2"></i>Purchase Request
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Car Information -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <h2 class="text-primary mb-3">{{ car.display_name }}</h2>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-tachometer-alt text-muted me-2"></i>
+                                    <strong>Mileage:</strong>
+                                    <span class="ms-2">{{ "{:,}".format(car.mileage) }} miles</span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-palette text-muted me-2"></i>
+                                    <strong>Color:</strong>
+                                    <span class="ms-2">{{ car.color }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-gas-pump text-muted me-2"></i>
+                                    <strong>Fuel Type:</strong>
+                                    <span class="ms-2">{{ car.fuel_type }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-cogs text-muted me-2"></i>
+                                    <strong>Transmission:</strong>
+                                    <span class="ms-2">{{ car.transmission }}</span>
+                                </div>
+                            </div>
+                            
+                            {% if car.engine_size %}
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-engine text-muted me-2"></i>
+                                        <strong>Engine:</strong>
+                                        <span class="ms-2">{{ car.engine_size }}</span>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-id-card text-muted me-2"></i>
+                                    <strong>VIN:</strong>
+                                    <span class="ms-2 font-monospace">{{ car.vin }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if car.description %}
+                            <div class="mt-3">
+                                <h6>Description:</h6>
+                                <p class="text-muted">{{ car.description }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4 text-center">
+                        <div class="bg-light p-4 rounded">
+                            <h3 class="text-primary mb-3">{{ car.formatted_price }}</h3>
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-check-circle me-1"></i>Available
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purchase Form -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-file-contract me-2"></i>Purchase Details
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Customer Information -->
+                    <div class="row mb-4">
+                        <div class="col">
+                            <h6 class="mb-3">Customer Information</h6>
+                            <div class="bg-light p-3 rounded">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Name:</strong> {{ current_user.full_name }}</p>
+                                        <p class="mb-1"><strong>Email:</strong> {{ current_user.email }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% if current_user.phone %}
+                                            <p class="mb-1"><strong>Phone:</strong> {{ current_user.phone }}</p>
+                                        {% endif %}
+                                        <p class="mb-1"><strong>Username:</strong> {{ current_user.username }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Financial Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            {{ form.down_payment.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.down_payment(class="form-control" + (" is-invalid" if form.down_payment.errors else "")) }}
+                            </div>
+                            {% if form.down_payment.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.down_payment.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Minimum down payment is typically 10% of vehicle price ({{ "${:,.2f}".format(car.price * 0.1) }})
+                            </small>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Purchase Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" value="{{ car.price }}" readonly>
+                            </div>
+                            <small class="form-text text-muted">
+                                Final price as listed for this vehicle
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Financing Option -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.financing_needed(class="form-check-input") }}
+                            {{ form.financing_needed.label(class="form-check-label") }}
+                        </div>
+                        <small class="form-text text-muted">
+                            Check this if you need financing assistance. Our team will contact you with financing options.
+                        </small>
+                    </div>
+                    
+                    <!-- Additional Notes -->
+                    <div class="mb-4">
+                        {{ form.notes.label(class="form-label") }}
+                        {{ form.notes(class="form-control", rows="4", placeholder="Any special requests, questions, or additional information...") }}
+                        {% if form.notes.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.notes.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Terms and Conditions -->
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-info-circle me-2"></i>Important Information
+                        </h6>
+                        <ul class="mb-0 small">
+                            <li>This is a purchase request, not a final sale</li>
+                            <li>Our team will review your request and contact you within 24 hours</li>
+                            <li>Final terms and pricing may be subject to negotiation</li>
+                            <li>Vehicle availability is subject to change</li>
+                            <li>All sales are subject to financing approval if applicable</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('main.inventory') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Inventory
+                        </a>
+                        
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Calculate financing amount dynamically
+    const downPaymentInput = document.querySelector('input[name="down_payment"]');
+    const vehiclePrice = {{ car.price }};
+    
+    if (downPaymentInput) {
+        downPaymentInput.addEventListener('input', function() {
+            const downPayment = parseFloat(this.value) || 0;
+            const financingAmount = vehiclePrice - downPayment;
+            
+            // You can add dynamic financing calculation display here
+            console.log('Financing needed:', financingAmount);
+        });
+    }
+    
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const downPayment = parseFloat(downPaymentInput.value) || 0;
+        
+        if (downPayment < 0) {
+            e.preventDefault();
+            alert('Down payment cannot be negative.');
+            downPaymentInput.focus();
+            return false;
+        }
+        
+        if (downPayment > vehiclePrice) {
+            e.preventDefault();
+            alert('Down payment cannot exceed the vehicle price.');
+            downPaymentInput.focus();
+            return false;
+        }
+        
+        return confirm('Are you sure you want to submit this purchase request?');
+    });
+});
+</script>
+{% endblock %}

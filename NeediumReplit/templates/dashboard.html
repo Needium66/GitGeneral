@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - AutoSales Pro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-1">
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </h1>
+            <p class="text-muted">
+                Welcome back, {{ current_user.first_name }}! 
+                <span class="badge bg-secondary">{{ current_user.role.value.title() }}</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    {% if current_user.is_admin() %}
+        <!-- Stats Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Total Users</h5>
+                                <h2 class="mb-0">{{ total_users }}</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Total Cars</h5>
+                                <h2 class="mb-0">{{ total_cars }}</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-car fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Available</h5>
+                                <h2 class="mb-0">{{ available_cars }}</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Pending</h5>
+                                <h2 class="mb-0">{{ pending_purchases }}</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-shopping-cart me-2"></i>Recent Purchases
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_purchases %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Car</th>
+                                            <th>Price</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for purchase in recent_purchases %}
+                                            <tr>
+                                                <td>{{ purchase.customer.full_name }}</td>
+                                                <td>{{ purchase.car.display_name }}</td>
+                                                <td>{{ purchase.formatted_price }}</td>
+                                                <td>
+                                                    <span class="badge bg-{{ 'success' if purchase.status.value == 'completed' 
+                                                                          else 'warning' if purchase.status.value == 'pending'
+                                                                          else 'info' if purchase.status.value == 'approved'
+                                                                          else 'danger' }}">
+                                                        {{ purchase.status.value.title() }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ purchase.created_at.strftime('%Y-%m-%d') }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p class="text-muted mb-0">No recent purchases found.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-tools me-2"></i>Quick Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('admin.add_car') }}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Add New Car
+                            </a>
+                            <a href="{{ url_for('admin.manage_users') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-users me-2"></i>Manage Users
+                            </a>
+                            <a href="{{ url_for('admin.manage_purchases') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-shopping-cart me-2"></i>Manage Purchases
+                            </a>
+                            <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-chart-line me-2"></i>Admin Panel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Sales Dashboard -->
+    {% elif current_user.is_sales() %}
+        <!-- Sales Stats -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">My Sales</h5>
+                                <h2 class="mb-0">{{ my_sales }}</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-trophy fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Pending</h5>
+                                <h2 class="mb-0">{{ my_pending }}</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Unassigned</h5>
+                                <h2 class="mb-0">{{ pending_assignments }}</h2>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-user-plus fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Quick Actions</h5>
+                        <a href="{{ url_for('admin.manage_purchases') }}" class="btn btn-light btn-sm">
+                            <i class="fas fa-tasks me-1"></i>Manage Sales
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Recent Sales -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2"></i>My Recent Sales
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_purchases %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Car</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for purchase in recent_purchases %}
+                                    <tr>
+                                        <td>{{ purchase.customer.full_name }}</td>
+                                        <td>{{ purchase.car.display_name }}</td>
+                                        <td>{{ purchase.formatted_price }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if purchase.status.value == 'completed' 
+                                                                  else 'warning' if purchase.status.value == 'pending'
+                                                                  else 'info' if purchase.status.value == 'approved'
+                                                                  else 'danger' }}">
+                                                {{ purchase.status.value.title() }}
+                                            </span>
+                                        </td>
+                                        <td>{{ purchase.created_at.strftime('%Y-%m-%d') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No sales assigned yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+    <!-- Customer Dashboard -->
+    {% else %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-shopping-cart me-2"></i>My Purchase Requests
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if my_purchases %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Car</th>
+                                            <th>Price</th>
+                                            <th>Down Payment</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for purchase in my_purchases %}
+                                            <tr>
+                                                <td>{{ purchase.car.display_name }}</td>
+                                                <td>{{ purchase.formatted_price }}</td>
+                                                <td>{{ purchase.formatted_down_payment }}</td>
+                                                <td>
+                                                    <span class="badge bg-{{ 'success' if purchase.status.value == 'completed' 
+                                                                          else 'warning' if purchase.status.value == 'pending'
+                                                                          else 'info' if purchase.status.value == 'approved'
+                                                                          else 'danger' }}">
+                                                        {{ purchase.status.value.title() }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ purchase.created_at.strftime('%Y-%m-%d') }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                                <h5>No Purchase Requests Yet</h5>
+                                <p class="text-muted mb-3">Start by browsing our inventory to find your perfect car.</p>
+                                <a href="{{ url_for('main.inventory') }}" class="btn btn-primary">
+                                    <i class="fas fa-search me-2"></i>Browse Cars
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Account Info
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Name:</strong> {{ current_user.full_name }}</p>
+                        <p><strong>Email:</strong> {{ current_user.email }}</p>
+                        <p><strong>Role:</strong> {{ current_user.role.value.title() }}</p>
+                        {% if current_user.phone %}
+                            <p><strong>Phone:</strong> {{ current_user.phone }}</p>
+                        {% endif %}
+                        <p><strong>Member Since:</strong> {{ current_user.created_at.strftime('%B %Y') }}</p>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-tools me-2"></i>Quick Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('main.inventory') }}" class="btn btn-primary">
+                                <i class="fas fa-search me-2"></i>Browse Cars
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

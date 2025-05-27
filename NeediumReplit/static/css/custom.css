@@ -1,0 +1,328 @@
+/* Custom CSS for AutoSales Pro */
+
+/* Root variables for consistent theming */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Global styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+/* Navigation enhancements */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--info-color) !important;
+}
+
+/* Hero section */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+}
+
+/* Card enhancements */
+.card {
+    border: none;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--bs-border-color);
+    font-weight: 600;
+}
+
+/* Button enhancements */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Table improvements */
+.table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--bs-border-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+/* Form enhancements */
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    border: 1px solid var(--bs-border-color);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Badge styles */
+.badge {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+/* Avatar placeholder */
+.avatar-placeholder {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* Hover effects for interactive cards */
+.hover-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Dashboard specific styles */
+.dashboard-stat-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.dashboard-stat-card.success {
+    border-left-color: var(--success-color);
+}
+
+.dashboard-stat-card.warning {
+    border-left-color: var(--warning-color);
+}
+
+.dashboard-stat-card.info {
+    border-left-color: var(--info-color);
+}
+
+/* Features section */
+.features-section .card {
+    border: 1px solid var(--bs-border-color);
+    transition: all 0.3s ease;
+}
+
+.features-section .card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+}
+
+/* Footer styles */
+footer {
+    margin-top: auto;
+}
+
+/* Loading animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center !important;
+    }
+    
+    .hero-section .col-lg-6:last-child {
+        margin-top: 2rem;
+    }
+    
+    .dashboard-stat-card .h3 {
+        font-size: 1.5rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* Custom alert styles */
+.alert {
+    border: none;
+    border-radius: 0.75rem;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: var(--success-color);
+}
+
+.alert-danger {
+    border-left-color: var(--danger-color);
+}
+
+.alert-warning {
+    border-left-color: var(--warning-color);
+}
+
+.alert-info {
+    border-left-color: var(--info-color);
+}
+
+/* Status badges with custom colors */
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+}
+
+/* Search form enhancements */
+.search-form {
+    background: var(--light-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+/* Car inventory grid */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Price display */
+.price-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--success-color);
+}
+
+/* Admin panel specific styles */
+.admin-card {
+    border-top: 3px solid var(--primary-color);
+}
+
+.admin-stat {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Utility classes */
+.text-shadow {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, var(--success-color), #146c43);
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, var(--warning-color), #e0a800);
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, var(--info-color), #0aa2c0);
+}
+
+/* Dark theme adjustments */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #1a1a1a;
+    --bs-body-color: #e9ecef;
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: #2d3436;
+    border-color: #495057;
+}
+
+[data-bs-theme="dark"] .table {
+    --bs-table-bg: transparent;
+}
+
+[data-bs-theme="dark"] .search-form {
+    background-color: #2d3436;
+}
+
+/* Animation classes */
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

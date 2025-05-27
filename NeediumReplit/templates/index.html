@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Home - AutoSales Pro{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5 mb-5 rounded">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">Find Your Perfect Car</h1>
+                <p class="lead mb-4">
+                    Professional car sales platform with comprehensive inventory management 
+                    and streamlined purchase process.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('main.inventory') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-search me-2"></i>Browse Inventory
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Get Started
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-car display-1"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section mb-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="mb-3">Why Choose AutoSales Pro?</h2>
+                <p class="lead text-muted">Professional car sales management with advanced features</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-shield-alt text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5 class="card-title">Secure & Reliable</h5>
+                        <p class="card-text">
+                            Role-based access control ensures secure data management 
+                            and user privacy protection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-users text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5 class="card-title">User Management</h5>
+                        <p class="card-text">
+                            Comprehensive user claims management with admin, sales, 
+                            and customer role separation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-chart-line text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5 class="card-title">Advanced Analytics</h5>
+                        <p class="card-text">
+                            Detailed reporting and analytics for sales performance 
+                            and inventory management.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Cars Section -->
+{% if featured_cars %}
+<section class="featured-cars mb-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="mb-3">Featured Vehicles</h2>
+                <p class="text-muted">Discover our latest arrivals and most popular vehicles</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for car in featured_cars %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-transparent">
+                            <h6 class="card-title mb-0">{{ car.display_name }}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-2 text-sm">
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-tachometer-alt me-1"></i>
+                                        {{ "{:,}".format(car.mileage) }} miles
+                                    </small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-palette me-1"></i>
+                                        {{ car.color }}
+                                    </small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-gas-pump me-1"></i>
+                                        {{ car.fuel_type }}
+                                    </small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-cogs me-1"></i>
+                                        {{ car.transmission }}
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            {% if car.description %}
+                                <p class="card-text mt-3 small">
+                                    {{ car.description[:100] }}{% if car.description|length > 100 %}...{% endif %}
+                                </p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="text-primary mb-0">{{ car.formatted_price }}</h5>
+                                {% if current_user.is_authenticated %}
+                                    <a href="{{ url_for('main.purchase_car', car_id=car.id) }}" 
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fas fa-shopping-cart me-1"></i>Purchase
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url_for('auth.login') }}" 
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-sign-in-alt me-1"></i>Login to Purchase
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('main.inventory') }}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-right me-2"></i>View All Vehicles
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+{% if not current_user.is_authenticated %}
+<section class="cta-section bg-light py-5 rounded">
+    <div class="container text-center">
+        <h2 class="mb-3">Ready to Get Started?</h2>
+        <p class="lead mb-4">Join AutoSales Pro today and streamline your car buying experience</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-user-plus me-2"></i>Create Account
+        </a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

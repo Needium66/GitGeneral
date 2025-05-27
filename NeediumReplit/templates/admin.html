@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - AutoSales Pro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-1">
+                <i class="fas fa-shield-alt me-2"></i>Admin Panel
+            </h1>
+            <p class="text-muted">System administration and management overview</p>
+        </div>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Users</h6>
+                            <h3 class="mb-0">{{ stats.total_users }}</h3>
+                            <small>All registered users</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Vehicles</h6>
+                            <h3 class="mb-0">{{ stats.total_cars }}</h3>
+                            <small>{{ stats.available_cars }} available</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-car fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Sales Status</h6>
+                            <h3 class="mb-0">{{ stats.completed_purchases }}</h3>
+                            <small>{{ stats.pending_purchases }} pending</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-cart fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">User Roles</h6>
+                            <h3 class="mb-0">{{ stats.customer_count }}</h3>
+                            <small>{{ stats.sales_count }} sales reps</small>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-user-tag fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Management Sections -->
+    <div class="row mb-4">
+        <div class="col">
+            <h3 class="mb-3">
+                <i class="fas fa-cogs me-2"></i>Management Tools
+            </h3>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- User Management -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-users me-2"></i>User Management
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Manage user accounts, roles, and permissions.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>View all users</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Edit user roles</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Activate/deactivate accounts</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-arrow-right me-2"></i>Manage Users
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Management -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-car me-2"></i>Inventory Management
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Add, edit, and manage vehicle inventory.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>Add new vehicles</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Update car details</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Track availability</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('admin.add_car') }}" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Add New Car
+                        </a>
+                        <a href="{{ url_for('admin.manage_cars') }}" class="btn btn-outline-success">
+                            <i class="fas fa-list me-2"></i>View All Cars
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Management -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-shopping-cart me-2"></i>Sales Management
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Review and manage purchase requests.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>Review purchases</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Assign sales reps</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Approve financing</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.manage_purchases') }}" class="btn btn-warning w-100">
+                        <i class="fas fa-arrow-right me-2"></i>Manage Purchases
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <!-- Recent Purchases -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clock me-2"></i>Recent Purchase Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_purchases %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Customer</th>
+                                        <th>Vehicle</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for purchase in recent_purchases %}
+                                        <tr>
+                                            <td><span class="font-monospace">#{{ purchase.id }}</span></td>
+                                            <td>{{ purchase.customer.full_name }}</td>
+                                            <td>{{ purchase.car.display_name }}</td>
+                                            <td>{{ purchase.formatted_price }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if purchase.status.value == 'completed' 
+                                                                      else 'warning' if purchase.status.value == 'pending'
+                                                                      else 'info' if purchase.status.value == 'approved'
+                                                                      else 'danger' }}">
+                                                    {{ purchase.status.value.title() }}
+                                                </span>
+                                            </td>
+                                            <td>{{ purchase.created_at.strftime('%m/%d/%Y') }}</td>
+                                            <td>
+                                                <a href="{{ url_for('admin.edit_purchase', purchase_id=purchase.id) }}" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('admin.manage_purchases') }}" class="btn btn-outline-primary">
+                                View All Purchases
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-info-circle text-muted fa-2x mb-3"></i>
+                            <p class="text-muted">No recent purchase activity</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Users -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-plus me-2"></i>Recent Registrations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_users %}
+                        {% for user in recent_users %}
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar-placeholder bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    {{ user.first_name[0] }}{{ user.last_name[0] }}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">{{ user.full_name }}</h6>
+                                    <small class="text-muted">
+                                        <span class="badge bg-secondary">{{ user.role.value.title() }}</span>
+                                        {{ user.created_at.strftime('%m/%d/%Y') }}
+                                    </small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('admin.manage_users') }}" class="btn btn-outline-primary btn-sm">
+                                View All Users
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-info-circle text-muted fa-2x mb-3"></i>
+                            <p class="text-muted">No recent registrations</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
