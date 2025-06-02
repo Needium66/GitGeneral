@@ -30,3 +30,18 @@ Go to your Github account and follow this path:
 -   git clone  e.g "git clone git@github.com:Needium66/artifact.git"
 -   Go to the location of your repo and check for its branch e.g "git branch"
 -   Run this command to see if your connection is active "git config --list"
+
+
+#####
+- Upgrading this repo to showcase my work with AI tools and technology
+- Focus will be to deploy projects that come across through conversations, study and research
+
+#####
+- AI tools/Model/Technology
+-   -   Replit
+-   -   Lovable
+-   -   ChatGPT
+
+#####
+-   Platform
+-   -   AWS
