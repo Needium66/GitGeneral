@@ -1,3 +1,21 @@
+#Decided to work on this project, which is one of the questions in an interview session
+#Design a cost effective data analytics platform, with data ingestion in real-time, ensuring data quality and minimal latency
+
+#Entered a prompt on Replit with the question
+
+#The output is below:
+#Design a cost-effective data analytics platform with 
+#real-time data ingestion, 
+#data quality monitoring,
+#and minimal latency using Streamlit
+#and Python's data science ecosystem.
+
+#Required approval to deploy:
+#Integrate with real streaming data sources
+#Add ML models for predictive analytics
+#Implement user authentication and role-based access
+#Add datawarehouse integration: PostgreSQL
+
 #The dependencies installed:
 
 #streamlit
@@ -12,6 +30,5 @@
 ✓ Added system performance monitoring and alerts
 ✓ Set up SQLite database with optimized schema and indexing
 
-The platform is now running and shows real-time simulated data flowing through sales, user activity,
-and system metrics. The dashboard displays key business metrics, revenue trends, user analytics, 
-and data quality scores with automatic refresh capabilities.
+The platform shows: data flowing through sales, user activity, and system metrics. 
+The dashboard displays key business metrics, revenue trends, user analytics,and data quality scores with automatic refresh capabilities.
