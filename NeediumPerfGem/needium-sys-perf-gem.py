@@ -1,9 +1,9 @@
-################################################
-#Created this from tinkering with Gemini      #
-#This measures the CPU performance overtime   #
-#This is as is                                #
-#TO DO: Refine                                #
-################################################
+###########################################################
+#Created this from tinkering with Gemini                 #
+#This measures the CPU and Memory performance overtime   #
+#This is as is                                           #
+#TO DO: Refine                                           #
+###########################################################
 
 import psutil
 import time
