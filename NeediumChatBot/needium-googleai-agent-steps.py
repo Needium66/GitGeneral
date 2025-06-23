@@ -1,9 +1,9 @@
-##########################################################
-#Create an assistant agent to optimize routine/regular tasks
-#Manage Emails: Create Emails, Read Emails, Updates
-#Manage Calendar Events: Create Meeting Invites, Check Updates
-#Assist with mundane and regular questions via text and audio
-#############################################################
+################################################################
+#Create an assistant agent to optimize routine/regular tasks   #
+#Manage Emails: Create Emails, Read Emails, Updates            #
+#Manage Calendar Events: Create Meeting Invites, Check Updates #
+#Assist with mundane and regular questions via text and audio  #
+################################################################
 #Requirements:
 #Telegram- Trigger (Runtie tool)
 #n8n platform: Framework (Orchestrator)
