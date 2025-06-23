@@ -1,0 +1,502 @@
+{
+  "name": "TV-Email-Calendar-GoogleAgent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -760,
+        0
+      ],
+      "id": "##7e0570-530e-4bb0-af34-31e1d159e1##",
+      "name": "Telegram Trigger",
+      "webhookId": "##a6bad6-b777-48f4-85df-ae5a9f4cae##",
+      "credentials": {
+        "telegramApi": {
+          "id": "####",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "####"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "####",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voice"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -600,
+        0
+      ],
+      "id": "####",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "####",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        -60
+      ],
+      "id": "####",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Transcribe the recording from Get_File",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "AIMessagePromptTemplate",
+              "message": "Transcribe the recording from Get_File"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        40,
+        120
+      ],
+      "id": "##46402a-#73#-4397-a5e2-83e5b68ca5##",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite-preview-06-17",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        260,
+        120
+      ],
+      "id": "##678785-#f0#-40a3-93e8-9c2da2723d##",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "####",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "- You have access to Get-Email tool that allows you to retrieve unread and read emails that are sent to the recipient.\n\n- You can use the Get-Email tool to retrieve the latest unread email for the recipient.\n\n- You also have access to \"Get_Calendar\" tool that enables you to see all the events of the recipient's google calendar.\n\n#Create events with Date and Time\n- Use the \"Create_Calendar\" to add any new event into the recipient's Google Calendar. IMPORTANT: Always use the correct date in CDT. We are in June now, make sure you are deeply aware of the time, date, and month in the year.\nAlways use this date and time: [DateTime: 2025-06-21T03:56:03.103-05:00]"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        360,
+        -60
+      ],
+      "id": "##f73e3a-#7f#-4c37-a59a-#75ac5607d##",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite-preview-06-17",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        160
+      ],
+      "id": "##fad5c6-#c5#-481b-96e2-#e27fa9c67##",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "#####",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Switch').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        680,
+        -80
+      ],
+      "id": "##8d3280-b1c6-40b9-9152-d49083ee62##",
+      "name": "Telegram1",
+      "webhookId": "##851c9b-#8a#-414b-9617-#ec71#d18a##",
+      "credentials": {
+        "telegramApi": {
+          "id": "####",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        120
+      ],
+      "id": "##b121ea-b906-44##-a391-6a70ef22c1##",
+      "name": "Get_File",
+      "webhookId": "##7dbc7b-#55#-#f7#-8ae2-c62d4ee37a##",
+      "credentials": {
+        "telegramApi": {
+          "id": "####",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 20,
+        "filters": {
+          "labelIds": [
+            "INBOX",
+            "UNREAD"
+          ],
+          "readStatus": "unread",
+          "receivedBefore": "2025-06-21T00:00:00"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        360
+      ],
+      "id": "5b08####-####-40fd-####-4c77ca0#####",
+      "name": "Get Email",
+      "webhookId": "##53d747#-#48#-4baa-####-99d542854#",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "####",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $fromAI('to', `raw email address of the recipient`) }}",
+        "subject": "={{ $fromAI('subject', `a clear and concise subject line`) }}",
+        "emailType": "text",
+        "message": "={{ $fromAI('body', `the body of the email itself`) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        740,
+        400
+      ],
+      "id": "####",
+      "name": "Gmail Send",
+      "webhookId": "####",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "####",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "####@gmail.com",
+          "mode": "list",
+          "cachedResultName": "####@gmail.com"
+        },
+        "timeMin": "=2025-06-01T03:20:28",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        760,
+        240
+      ],
+      "id": "##b7ef4f-9bfb-#a0#-#0e#-1524be55cb##",
+      "name": "Get_Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "####",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "####@gmail.com",
+          "mode": "list",
+          "cachedResultName": "#####@gmail.com"
+        },
+        "end": "={{ $fromAI('end', `date and time when the event should end`) }}",
+        "additionalFields": {
+          "summary": "={{ $fromAI('title', `title of the event`) }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        860,
+        160
+      ],
+      "id": "##3f6b4d-#87#-#ab#-a310-#2ff15a1d8##",
+      "name": "Create_Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "####",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get_File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_File": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Send": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "###244d7e-####-460b-####-#####",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "####"
+  },
+  "id": "#####",
+  "tags": []
+}
