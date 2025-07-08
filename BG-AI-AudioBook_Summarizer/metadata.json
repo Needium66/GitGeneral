@@ -1,0 +1,5 @@
+{
+  "name": "AI Audio Book Summarizer",
+  "description": "An application that uses AI to generate a 10-minute audio summary of Bill Gates' memoir, 'Source Code', complete with a narrated script and text-to-speech playback.",
+  "requestFramePermissions": []
+}
